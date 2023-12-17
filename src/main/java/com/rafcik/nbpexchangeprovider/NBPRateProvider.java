@@ -16,6 +16,12 @@ public class NBPRateProvider extends AbstractRateProvider implements LoaderServi
         super(providerContext);
 
         nbpExchangeRateContainer = new NBPExchangeRateContainer();
+
+        NBPRateLoaderServiceInitializer
+            .create(this)
+            .withCurrent()
+            .withTestHistoric()
+            .initialize();
     }
 
     @Override
