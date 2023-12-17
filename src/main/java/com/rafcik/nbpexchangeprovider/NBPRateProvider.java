@@ -10,13 +10,17 @@ import java.io.InputStream;
 
 public class NBPRateProvider extends AbstractRateProvider implements LoaderService.LoaderListener {
 
+    private final NBPExchangeRateContainer nbpExchangeRateContainer;
+
     public NBPRateProvider(ProviderContext providerContext) {
         super(providerContext);
+
+        nbpExchangeRateContainer = new NBPExchangeRateContainer();
     }
 
     @Override
     public ExchangeRate getExchangeRate(ConversionQuery conversionQuery) {
-        return null;
+        return nbpExchangeRateContainer.getExchangeRate(conversionQuery);
     }
 
     @Override
