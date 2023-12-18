@@ -41,7 +41,6 @@ public final class NBPRateLoaderServiceInitializer {
             .withUpdatePolicy(LoaderService.UpdatePolicy.SCHEDULED)
             .withProperties(Map.of("period", "03:00"))
             .withLoaderListener(loaderListener)
-//            .withBackupResource(URI.create(ECB_CURRENT_FALLBACK_PATH))
             .withResourceLocations(URI.create("https://api.nbp.pl/api/exchangerates/tables/A"))
             .withStartRemote(false)
             .build();
@@ -51,40 +50,35 @@ public final class NBPRateLoaderServiceInitializer {
         return this;
     }
 
-//    public NBPRateLoaderServiceInitializer withHistoric(LocalDate from, LocalDate to) {
-//
-//
-//        loadDataInformations.add(loadDataInformation);
-//
-//        return this;
-//    }
+    public NBPRateLoaderServiceInitializer withHistoricSinceBeginning() {
+        LocalDate beginning = LocalDate.of(2002, Month.of(1), 1);
 
-    public NBPRateLoaderServiceInitializer withTestHistoric() {
-        List<LoadDataInformation> test = List.of(
-            createForSingleHistoric(LocalDate.of(2020, Month.of(1), 1), LocalDate.of(2020, Month.of(3), 31)),
-            createForSingleHistoric(LocalDate.of(2020, Month.of(4), 1), LocalDate.of(2020, Month.of(6), 30)),
-            createForSingleHistoric(LocalDate.of(2020, Month.of(7), 1), LocalDate.of(2020, Month.of(9), 30)),
-            createForSingleHistoric(LocalDate.of(2020, Month.of(10), 1), LocalDate.of(2020, Month.of(12), 31)),
+        return withHistoricSince(beginning);
+    }
 
-            createForSingleHistoric(LocalDate.of(2021, Month.of(1), 1), LocalDate.of(2021, Month.of(3), 31)),
-            createForSingleHistoric(LocalDate.of(2021, Month.of(4), 1), LocalDate.of(2021, Month.of(6), 30)),
-            createForSingleHistoric(LocalDate.of(2021, Month.of(7), 1), LocalDate.of(2021, Month.of(9), 30)),
-            createForSingleHistoric(LocalDate.of(2021, Month.of(10), 1), LocalDate.of(2021, Month.of(12), 31)),
+    public NBPRateLoaderServiceInitializer withHistoricSince(LocalDate date) {
+        LocalDate fromDate = LocalDate.from(date);
 
-            createForSingleHistoric(LocalDate.of(2022, Month.of(1), 1), LocalDate.of(2022, Month.of(3), 31)),
-            createForSingleHistoric(LocalDate.of(2022, Month.of(4), 1), LocalDate.of(2022, Month.of(6), 30)),
-            createForSingleHistoric(LocalDate.of(2022, Month.of(7), 1), LocalDate.of(2022, Month.of(9), 30)),
-            createForSingleHistoric(LocalDate.of(2022, Month.of(10), 1), LocalDate.of(2022, Month.of(12), 31)),
+        while (fromDate.isBefore(LocalDate.now())) {
+            LocalDate toDate = createToDate(fromDate);
 
-            createForSingleHistoric(LocalDate.of(2023, Month.of(1), 1), LocalDate.of(2023, Month.of(3), 31)),
-            createForSingleHistoric(LocalDate.of(2023, Month.of(4), 1), LocalDate.of(2023, Month.of(6), 30)),
-            createForSingleHistoric(LocalDate.of(2023, Month.of(7), 1), LocalDate.of(2023, Month.of(9), 30)),
-            createForSingleHistoric(LocalDate.of(2023, Month.of(10), 1), LocalDate.now())
-        );
+            LoadDataInformation result = createForSingleHistoric(fromDate, toDate);
+            loadDataInformations.add(result);
 
-        loadDataInformations.addAll(test);
+            fromDate = toDate.plusDays(1);
+        }
 
         return this;
+    }
+
+    private LocalDate createToDate(LocalDate fromDate) {
+        LocalDate toDate = fromDate.plusMonths(3).minusDays(1);
+
+        if (toDate.isAfter(LocalDate.now())) {
+            return LocalDate.now();
+        }
+
+        return toDate;
     }
 
     private LoadDataInformation createForSingleHistoric(LocalDate from, LocalDate to) {
@@ -96,7 +90,6 @@ public final class NBPRateLoaderServiceInitializer {
             .withUpdatePolicy(LoaderService.UpdatePolicy.ONSTARTUP)
             .withProperties(Map.of())
             .withLoaderListener(loaderListener)
-//            .withBackupResource(URI.create(ECB_CURRENT_FALLBACK_PATH))
             .withResourceLocations(URI.create(url))
             .withStartRemote(false)
             .build();

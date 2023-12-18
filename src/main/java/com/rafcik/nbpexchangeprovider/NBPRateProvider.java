@@ -50,7 +50,7 @@ public class NBPRateProvider extends AbstractRateProvider implements LoaderServi
         NBPRateLoaderServiceInitializer
             .create(this)
             .withCurrent()
-            .withTestHistoric()
+            .withHistoricSinceBeginning()
             .initialize();
     }
 
