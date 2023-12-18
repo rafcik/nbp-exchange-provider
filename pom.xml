@@ -8,6 +8,33 @@
     <artifactId>nbp-exchange-provider</artifactId>
     <version>1.0.0</version>
 
+    <name>com.rafcik:nbp-exchange-provider</name>
+    <description>This library is an implementation of java money exchange provider for NBP (Narodowy Bank Polski). It is fetching money rates since 2002-01-01 till today</description>
+    <url>https://github.com/rafcik/nbp-exchange-provider</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Rafal Pasiut</name>
+            <email>pasiutrafal@gmail.com</email>
+            <url>https://github.com/rafcik</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/rafcik/nbp-exchange-provider.git</connection>
+        <tag>main</tag>
+        <developerConnection>scm:git:https://github.com/rafcik/nbp-exchange-provider.git</developerConnection>
+        <url>https://github.com/rafcik/nbp-exchange-provider</url>
+    </scm>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
