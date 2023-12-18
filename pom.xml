@@ -38,6 +38,13 @@
             <artifactId>moneta-convert</artifactId>
             <version>1.4.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.8.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
