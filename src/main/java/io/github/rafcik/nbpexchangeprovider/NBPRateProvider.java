@@ -1,11 +1,11 @@
-package com.rafcik.nbpexchangeprovider;
+package io.github.rafcik.nbpexchangeprovider;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rafcik.nbpexchangeprovider.models.NBPRate;
-import com.rafcik.nbpexchangeprovider.models.NBPRates;
-import com.rafcik.nbpexchangeprovider.models.NBPRatesTable;
+import io.github.rafcik.nbpexchangeprovider.models.NBPRate;
+import io.github.rafcik.nbpexchangeprovider.models.NBPRates;
+import io.github.rafcik.nbpexchangeprovider.models.NBPRatesTable;
 import org.javamoney.moneta.convert.ExchangeRateBuilder;
 import org.javamoney.moneta.spi.AbstractRateProvider;
 import org.javamoney.moneta.spi.DefaultNumberValue;

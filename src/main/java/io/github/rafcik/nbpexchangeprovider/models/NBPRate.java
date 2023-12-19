@@ -1,4 +1,4 @@
-package com.rafcik.nbpexchangeprovider.models;
+package io.github.rafcik.nbpexchangeprovider.models;
 
 import java.math.BigDecimal;
 

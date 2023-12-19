@@ -1,4 +1,4 @@
-package com.rafcik.nbpexchangeprovider;
+package io.github.rafcik.nbpexchangeprovider;
 
 
 import org.javamoney.moneta.spi.loader.LoadDataInformation;

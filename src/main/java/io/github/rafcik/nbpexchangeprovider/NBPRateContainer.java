@@ -1,4 +1,4 @@
-package com.rafcik.nbpexchangeprovider;
+package io.github.rafcik.nbpexchangeprovider;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

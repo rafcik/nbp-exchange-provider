@@ -1,4 +1,4 @@
-package com.rafcik.nbpexchangeprovider;
+package io.github.rafcik.nbpexchangeprovider;
 
 import org.javamoney.moneta.Money;
 import org.testng.annotations.BeforeTest;
