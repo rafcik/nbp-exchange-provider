@@ -25,6 +25,10 @@ public class NBPRateContainer {
     }
 
     public Optional<BigDecimal> getRate(LocalDate[] dates, String currencyCode) {
+        if (dates == null || dates.length == 0) {
+            return getRate(currencyCode);
+        }
+
         for (LocalDate date : dates) {
             Optional<BigDecimal> rate = getRate(date, currencyCode);
 
@@ -37,6 +41,10 @@ public class NBPRateContainer {
     }
 
     public Optional<BigDecimal> getRate(LocalDate date, String currencyCode) {
+        if (date == null) {
+            return getRate(currencyCode);
+        }
+
         return Optional
             .ofNullable(rates.get(date))
             .map(dayRates -> dayRates.get(currencyCode));

@@ -151,10 +151,16 @@ public class NBPRateProvider extends AbstractRateProvider implements LoaderServi
     }
 
     private ConversionContext createBaseConversionContext(ConversionQuery query) {
-        return ConversionContextBuilder
-            .create(CONTEXT, RateType.HISTORIC)
-            .set(getQueryDates(query))
-            .build();
+        LocalDate[] dates = getQueryDates(query);
+
+        ConversionContextBuilder builder = ConversionContextBuilder
+            .create(CONTEXT, RateType.HISTORIC);
+
+        if (dates != null) {
+            builder.set(dates);
+        }
+
+        return builder.build();
     }
 
 }
