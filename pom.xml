@@ -6,7 +6,7 @@
 
     <groupId>io.github.rafcik</groupId>
     <artifactId>nbp-exchange-provider</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name>com.rafcik:nbp-exchange-provider</name>
     <description>This library is an implementation of java money exchange provider for NBP (Narodowy Bank Polski). It is fetching money rates since 2002-01-01 till today</description>

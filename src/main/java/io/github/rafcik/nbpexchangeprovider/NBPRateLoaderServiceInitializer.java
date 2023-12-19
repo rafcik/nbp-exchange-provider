@@ -6,7 +6,11 @@ import org.javamoney.moneta.spi.loader.LoadDataInformationBuilder;
 import org.javamoney.moneta.spi.loader.LoaderService;
 
 import javax.money.spi.Bootstrap;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -32,6 +36,13 @@ public final class NBPRateLoaderServiceInitializer {
         loadDataInformations
             .stream()
             .filter((LoadDataInformation loadDataInformation) -> !loader.isResourceRegistered(loadDataInformation.getResourceId()))
+            .filter((LoadDataInformation loadDataInformation) -> loadDataInformation.getUpdatePolicy().equals(LoaderService.UpdatePolicy.NEVER))
+            .forEach(loader::registerData);
+
+        loadDataInformations
+            .stream()
+            .filter((LoadDataInformation loadDataInformation) -> !loader.isResourceRegistered(loadDataInformation.getResourceId()))
+            .filter((LoadDataInformation loadDataInformation) -> !loadDataInformation.getUpdatePolicy().equals(LoaderService.UpdatePolicy.NEVER))
             .forEach(loader::registerAndLoadData);
     }
 
@@ -85,14 +96,26 @@ public final class NBPRateLoaderServiceInitializer {
         String resourceId = String.format("nbp-rate-provider-historic-%tY-%tm-%td-%tY-%tm-%td", from, from, from, to, to, to);
         String url = String.format("https://api.nbp.pl/api/exchangerates/tables/A/%tY-%tm-%td/%tY-%tm-%td", from, from, from, to, to, to);
 
+        String backupResourceUrl = String.format("src/main/resources/fallback//%s.dat", resourceId);
+        File backupResourceFile = new File(backupResourceUrl);
+
         return new LoadDataInformationBuilder()
             .withResourceId(resourceId)
-            .withUpdatePolicy(LoaderService.UpdatePolicy.ONSTARTUP)
+            .withUpdatePolicy(createUpdatePolicy(backupResourceFile))
             .withProperties(Map.of())
             .withLoaderListener(loaderListener)
             .withResourceLocations(URI.create(url))
+            .withBackupResource(backupResourceFile.toURI())
             .withStartRemote(false)
             .build();
+    }
+
+    private LoaderService.UpdatePolicy createUpdatePolicy(File backupResourceFile) {
+        if (backupResourceFile.exists()) {
+            return LoaderService.UpdatePolicy.NEVER;
+        }
+
+        return LoaderService.UpdatePolicy.ONSTARTUP;
     }
 
 }
