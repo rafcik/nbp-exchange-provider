@@ -6,8 +6,6 @@ import org.javamoney.moneta.spi.loader.LoadDataInformationBuilder;
 import org.javamoney.moneta.spi.loader.LoaderService;
 
 import javax.money.spi.Bootstrap;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -19,6 +17,7 @@ import java.util.Map;
 
 public final class NBPRateLoaderServiceInitializer {
 
+    private final ClassLoader classLoader = NBPRateLoaderServiceInitializer.class.getClassLoader();
     private final List<LoadDataInformation> loadDataInformations = new ArrayList<>();
     private final LoaderService.LoaderListener loaderListener;
 
@@ -96,22 +95,34 @@ public final class NBPRateLoaderServiceInitializer {
         String resourceId = String.format("nbp-rate-provider-historic-%tY-%tm-%td-%tY-%tm-%td", from, from, from, to, to, to);
         String url = String.format("https://api.nbp.pl/api/exchangerates/tables/A/%tY-%tm-%td/%tY-%tm-%td", from, from, from, to, to, to);
 
-        String backupResourceUrl = String.format("src/main/resources/fallback//%s.dat", resourceId);
-        File backupResourceFile = new File(backupResourceUrl);
+        URI uri = getResourceLocation(resourceId);
 
         return new LoadDataInformationBuilder()
             .withResourceId(resourceId)
-            .withUpdatePolicy(createUpdatePolicy(backupResourceFile))
+            .withUpdatePolicy(createUpdatePolicy(uri))
             .withProperties(Map.of())
             .withLoaderListener(loaderListener)
             .withResourceLocations(URI.create(url))
-            .withBackupResource(backupResourceFile.toURI())
+            .withBackupResource(uri)
             .withStartRemote(false)
             .build();
     }
 
-    private LoaderService.UpdatePolicy createUpdatePolicy(File backupResourceFile) {
-        if (backupResourceFile.exists()) {
+    private URI getResourceLocation(String resourceId) {
+        try {
+            URL resource = classLoader.getResource(String.format("fallback/%s.dat", resourceId));
+
+            if (resource != null) {
+                return resource.toURI();
+            }
+        } catch (URISyntaxException ignored) {
+        }
+
+        return null;
+    }
+
+    private LoaderService.UpdatePolicy createUpdatePolicy(URI uri) {
+        if (uri != null) {
             return LoaderService.UpdatePolicy.NEVER;
         }
 
